@@ -1,7 +1,7 @@
 package cho.sw.websocketchat.entities;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,12 +22,10 @@ public class Member {
     String email;
     String nickName;
     String name;
-//    @Enumerated(EnumType.STRING)
-//    Gender gender;
-    String phoneNumber;
-    LocalDate birthDay;
     String role;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FriendMapping> friends;
 //    @OneToMany(mappedBy = "member")
 //    Set<MemberChatroomMapping> memberChatroomMappingSet;
 }

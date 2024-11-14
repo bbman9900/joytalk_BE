@@ -18,9 +18,6 @@ public class MemberFactory {
                         .email((String) attributeMap.get("email"))
                         .nickName((String) ((Map) attributeMap.get("profile")).get("nickname"))
                         .name((String) attributeMap.get("name"))
-                        .phoneNumber((String) attributeMap.get("phone_number"))
-//                        .gender(Gender.valueOf(((String) attributeMap.get("gender")).toUpperCase()))
-                        .birthDay(getBirthDay(attributeMap))
                         .role("USER_ROLE")
                         .build();
             }
@@ -37,10 +34,10 @@ public class MemberFactory {
         };
     }
 
-    private static LocalDate getBirthDay(Map<String, Object> attributeMap) {
-        String birthYear = (String) attributeMap.get("birthyear");
-        String birthDay = (String) attributeMap.get("birthday");
-
-        return LocalDate.parse(birthYear + birthDay, DateTimeFormatter.BASIC_ISO_DATE);
-    }
+//    private static LocalDate getBirthDay(Map<String, Object> attributeMap) {
+//        String birthYear = (String) attributeMap.get("birthyear");
+//        String birthDay = (String) attributeMap.get("birthday");
+//
+//        return LocalDate.parse(birthYear + birthDay, DateTimeFormatter.BASIC_ISO_DATE);
+//    }
 }
