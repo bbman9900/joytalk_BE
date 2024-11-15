@@ -8,7 +8,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @EnableWebSocketMessageBroker
 @Configuration
-public class StompConfiguration implements WebSocketMessageBrokerConfigurer {
+public class StompConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp/chats");

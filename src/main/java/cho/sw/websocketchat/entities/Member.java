@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -20,12 +21,15 @@ public class Member {
     Long id;
 
     String email;
-    String nickName;
     String name;
+    @Setter
+    String nickName;
+    @Setter
+    String profileImage;
     String role;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<FriendMapping> friends;
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<FriendMapping> friends;
 //    @OneToMany(mappedBy = "member")
 //    Set<MemberChatroomMapping> memberChatroomMappingSet;
 }

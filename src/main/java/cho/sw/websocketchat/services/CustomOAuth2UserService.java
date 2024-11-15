@@ -23,24 +23,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
+        try {
+            log.debug("OAuth2UserRequest : {}", userRequest);
+            OAuth2User oAuth2User = super.loadUser(userRequest);
+            log.debug("OAuth2User : {}", oAuth2User);
 //        log.info("oAuth2User : {}", oAuth2User);
-        Map<String, Object> attributeMap = oAuth2User.getAttribute("kakao_account");
-        String email ="";
+            String email = oAuth2User.getAttribute("email");
 //        log.info("attributeMap : {}", attributeMap);
-        if (attributeMap != null) {
-            email = (String)attributeMap.get("email");
-        }
 //        log.info("email : {}", email);
 //        Optional<Member> byEmail = memberRepository.findByEmail(email);
 //        log.info("findByEmail : {}", byEmail);
-        Member member = memberRepository.findByEmail(email)
-                .orElseGet(() -> {
-                    log.info("member not");
-                    Member newMember = MemberFactory.create(userRequest, oAuth2User);
-                    return memberRepository.save(newMember);
-                });
+            Member member = memberRepository.findByEmail(email)
+                    .orElseGet(() -> {
+                        log.info("member not");
+                        Member newMember = MemberFactory.create(userRequest, oAuth2User);
+                        return memberRepository.save(newMember);
+                    });
 
-        return new CustomOAuth2User(member, oAuth2User.getAttributes());
+            return new CustomOAuth2User(member, oAuth2User.getAttributes());
+        } catch (Exception e) {
+            log.error("OAuth2 로그인 처리 중 에러 발생", e);
+            throw e;
+        }
     }
 }

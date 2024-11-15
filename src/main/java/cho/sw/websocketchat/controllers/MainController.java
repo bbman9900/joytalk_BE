@@ -7,8 +7,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +26,7 @@ public class MainController {
     @GetMapping("/list")
     @Operation(summary = "친구 목록 조회", description = "친구 목록 조회")
     public List<MemberDto> getFriends(@RequestParam Long memberId) {
+        log.info("친구 조회 도착");
         List<Member> friendList = mainService.getFriendList(memberId);
 
         return friendList.stream()
@@ -46,5 +48,11 @@ public class MainController {
     @Operation(summary = "친구 추가", description = "친구 추가")
     public Boolean addFriend(@RequestParam Long memberId, @RequestParam Long friendId) {
         return mainService.addFriend(memberId, friendId);
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "친구 삭제", description = "친구 삭제")
+    public Boolean deleteFriend(@RequestParam Long memberId, @RequestParam Long friendId) {
+        return mainService.deleteFriend(memberId, friendId);
     }
 }

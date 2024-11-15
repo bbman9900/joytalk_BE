@@ -1,41 +1,42 @@
 package cho.sw.websocketchat.services;
 
 
-import cho.sw.websocketchat.entities.Chatroom;
 import cho.sw.websocketchat.entities.FriendMapping;
 import cho.sw.websocketchat.entities.Member;
-import cho.sw.websocketchat.entities.MemberChatroomMapping;
-import cho.sw.websocketchat.repositories.FriendListRepository;
+import cho.sw.websocketchat.repositories.FriendMappingRepository;
 import cho.sw.websocketchat.repositories.MemberRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class MainService {
 
     private final MemberRepository memberRepository;
-    private final FriendListRepository friendListRepository;
+    private final FriendMappingRepository friendMappingRepository;
 
+    @Transactional(readOnly = true)
     public List<Member> getFriendList(Long memberId) {
-        List<FriendMapping> friendMapping = friendListRepository.findAllByMemberId(memberId);
+        List<FriendMapping> friendMapping = friendMappingRepository.findAllByMemberId(memberId);
 
         return friendMapping.stream()
                 .map(FriendMapping::getFriend)
                 .toList();
     }
+    @Transactional(readOnly = true)
     public List<Member> searchMember(String nickName) {
-        List<Member> searchedMember = memberRepository.findAllByNickName(nickName);
 
-        return searchedMember;
+        return memberRepository.findAllByNickNameContaining(nickName);
     }
 
     public Boolean addFriend(Long memberId, Long friendId) {
-        if (friendListRepository.existsByMemberIdAndFriendId(memberId, friendId)) {
+        if (friendMappingRepository.existsByMemberIdAndFriendId(memberId, friendId)) {
             log.info("이미 추가된 친구입니다.");
             return false;
         }
@@ -51,7 +52,20 @@ public class MainService {
                 .friend(friendById.get())
                 .build();
 
-        friendListRepository.save(friendMapping);
+        friendMappingRepository.save(friendMapping);
+
+        return true;
+    }
+
+
+
+    public Boolean deleteFriend(Long memberId, Long friendId) {
+        if (!friendMappingRepository.existsByMemberIdAndFriendId(memberId, friendId)) {
+            log.info("친구 관계가 아닌 사용자입니다.");
+            return false;
+        }
+
+        friendMappingRepository.deleteByMemberIdAndFriendId(memberId, friendId);
 
         return true;
     }

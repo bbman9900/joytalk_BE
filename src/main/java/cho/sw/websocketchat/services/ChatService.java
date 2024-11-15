@@ -84,12 +84,13 @@ public class ChatService {
                 .member(member)
                 .chatroom(chatroom)
                 .build();
-        log.info("{}",message.getText());
+        log.info("ChatService-saveMessage : {}",message.getText());
 
         return messageRepository.save(message);
     }
 
     public List<Message> getMessageList(Long chatroomId) {
+        log.info("ChatService-getMessageList : {}", chatroomId);
         return messageRepository.findAllByChatroomId(chatroomId);
     }
 }

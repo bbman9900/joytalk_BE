@@ -26,9 +26,10 @@ public class StompChatController {
     @MessageMapping("/chats/{chatroomId}")
     @SendTo("/sub/chats/{chatroomId}")
     public ChatMessage handleMessage(/*@AuthenticationPrincipal*/ Principal principal, @DestinationVariable Long chatroomId, @Payload Map<String, String> payload) {
-        log.info("{} sent {} in {}", principal.getName(), payload, chatroomId);
+        log.info("StompChatController : {} sent {} in {}", principal.getName(), payload, chatroomId);
         CustomOAuth2User user = (CustomOAuth2User) ((OAuth2AuthenticationToken) principal).getPrincipal();
-        Message message = chatService.saveMessage(user.getMember(), chatroomId, payload.get("message"));
+        String message = payload.get("message").equals("님이 방에 들어왓습니다.") ? principal.getName() + "님이 방에 들어왓습니다." : payload.get("message");
+        chatService.saveMessage(user.getMember(), chatroomId, message);
 
         return new ChatMessage(principal.getName(), payload.get("message"));
     }
